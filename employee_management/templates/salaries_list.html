@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Salaries List</title>
+</head>
+
+<body>
+    <nav style="display: flex; gap: 20px; font-weight:800; font-size:larger">
+        <a href="{% url 'employees_list' %}" style="text-decoration: none;">Employees</a>
+        <a href="{% url 'add_employee' %}" style="text-decoration: none;">Add Employee</a>
+        <a href="{% url 'update_employee' employee_id=5 %}" style="text-decoration: none;">Update Employee</a>
+        <a href="{% url 'departments_list' %}" style="text-decoration: none;">Departments</a>
+        <a href="{% url 'department_hierarchy' %}" style="text-decoration: none;">Department Hierarchy</a>
+        <a href="{% url 'add_department' %}" style="text-decoration: none;">Add Department</a>
+        <a href="{% url 'update_department' department_id=2 %}" style="text-decoration: none;">Update Department</a>
+        <a href="{% url 'salaries_list' %}" style="text-decoration: none;">Salaries List</a>
+        <a href="{% url 'add_salary' %}" style="text-decoration: none;">Add Salary</a>
+        <a href="{% url 'update_salary' salary_id=8 %}" style="text-decoration: none;">Update Salary</a>
+        <a href="{% url 'department_salary_costs' %}" style="text-decoration: none;">Department Wise Salary
+            Costs</a>
+    </nav>
+    <hr>
+    <h2>Salaries List with Updates in Range</h2>
+
+    {% if employee_wise_salaries %}
+        {% for employee, salaries in employee_wise_salaries.items %}
+            <h3>{{ employee }}</h3>
+            <ul>
+                {% for salary in salaries %}
+                    <li style="padding: 2px;">{{ salary.salary_amount }} - {{ salary.start_date }} to {{ salary.end_date }} <button><a style=" text-decoration:none" href="{% url 'update_salary' salary.salary_id %}">Update Salary</a> </button></li>
+                    
+                    
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p>No salaries available.</p>
+    {% endif %}
+<button>
+    <a  style="text-decoration:none" href="{% url 'add_salary' %}">Add Salary</a> </button>
+    
+</body>
+
+</html>

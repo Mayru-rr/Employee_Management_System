@@ -1,0 +1,11 @@
+
+<div class="box">
+    {{ employee.name }} ({{ employee.designation }})
+    {% if employee.employee_set.all %}
+        <div class="org-chart">
+            {% for sub_employee in employee.employee_set.all %}
+                {% include "sub_employee_box.html" with employee=sub_employee %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

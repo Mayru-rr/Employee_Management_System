@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Hierarchy</title>
+    <style>
+        
+
+        h1, h2 {
+            text-align: center;
+            color: black;
+        }
+
+        .org-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            width: 180px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .box h3 {
+            margin: 0 0 5px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .box p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .sub-box {
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <nav style="display: flex; gap: 20px; font-weight:800; font-size:larger">
+        <a href="{% url 'employees_list' %}" style="text-decoration: none;">Employees</a>
+        <a href="{% url 'add_employee' %}" style="text-decoration: none;">Add Employee</a>
+        <a href="{% url 'update_employee' employee_id=5 %}" style="text-decoration: none;">Update Employee</a>
+        <a href="{% url 'departments_list' %}" style="text-decoration: none;">Departments</a>
+        <a href="{% url 'department_hierarchy' %}" style="text-decoration: none;">Department Hierarchy</a>
+        <a href="{% url 'add_department' %}" style="text-decoration: none;">Add Department</a>
+        <a href="{% url 'update_department' department_id=2 %}" style="text-decoration: none;">Update Department</a>
+        <a href="{% url 'salaries_list' %}" style="text-decoration: none;">Salaries List</a>
+        <a href="{% url 'add_salary' %}" style="text-decoration: none;">Add Salary</a>
+        <a href="{% url 'update_salary' salary_id=8 %}" style="text-decoration: none;">Update Salary</a>
+        <a href="{% url 'department_salary_costs' %}" style="text-decoration: none;">Department Wise Salary
+            Costs</a>
+    </nav>
+    <hr>
+    <h1>Department Hierarchy</h1>
+    
+    {% for department in departments %}
+        <h2>{{ department.name }}</h2>
+        
+        <div class="org-chart">
+            {% for employee in department.employee_set.all %}
+                {% if not employee.reporting_manager %}
+                    <div class="box">
+                        <h3>{{ employee.name }}</h3>
+                        <p>{{ employee.designation }}</p>
+                        {% for sub_employee in employee.employee_set.all %}
+                            {% include "sub_employee_box.html" with employee=sub_employee %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>

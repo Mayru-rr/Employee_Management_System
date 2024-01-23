@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Employee</title>
+    
+</head>
+
+<body>
+
+    <nav style="display: flex; gap: 20px; font-weight:800; font-size:larger">
+        <a href="{% url 'employees_list' %}" style="text-decoration: none;">Employees</a>
+        <a href="{% url 'add_employee' %}" style="text-decoration: none;">Add Employee</a>
+        <a href="{% url 'update_employee' employee_id=5 %}" style="text-decoration: none;">Update Employee</a>
+        <a href="{% url 'departments_list' %}" style="text-decoration: none;">Departments</a>
+        <a href="{% url 'department_hierarchy' %}" style="text-decoration: none;">Department Hierarchy</a>
+        <a href="{% url 'add_department' %}" style="text-decoration: none;">Add Department</a>
+        <a href="{% url 'update_department' department_id=2 %}" style="text-decoration: none;">Update Department</a>
+        <a href="{% url 'salaries_list' %}" style="text-decoration: none;">Salaries List</a>
+        <a href="{% url 'add_salary' %}" style="text-decoration: none;">Add Salary</a>
+        <a href="{% url 'update_salary' salary_id=8 %}" style="text-decoration: none;">Update Salary</a>
+        <a href="{% url 'department_salary_costs' %}" style="text-decoration: none;">Department Wise Salary
+            Costs</a>
+    </nav>
+    <hr>
+
+    <h2>Add Employee</h2>
+<div class="mj" style="display: flex; justify-content:center">
+    
+    <form method="post" action="{% url 'add_employee' %}" >
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required><br>
+        
+        <label for="address">Address:</label>
+        <textarea name="address" required></textarea><br>
+        
+        <label for="designation">Designation:</label>
+        <select name="designation" required>
+            <option value="Associate">Associate</option>
+            <option value="TL">TL</option>
+            <option value="Manager">Manager</option>
+        </select><br>
+        
+        <label for="department">Department:</label>
+        <select name="department" required onchange="filterManagers(this.value)">
+            {% for department in departments %}
+            <option value="{{ department.id }}">{{ department.name }}</option>
+            {% endfor %}
+        </select><br>
+        
+        <label for="reporting_manager">Reporting Manager:</label>
+        <select name="reporting_manager">
+            <option value="" selected>None</option>
+            {% for manager in managers %}
+            <option value="{{ manager.id }}" data-department="{{ manager.department.id }}">{{ manager.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <script>
+            function filterManagers(selectedDepartment) {
+                var reportingManagerDropdown = document.getElementsByName("reporting_manager")[0];
+                var managerOptions = reportingManagerDropdown.getElementsByTagName("option");
+                
+             
+                for (var i = 0; i < managerOptions.length; i++) {
+                    managerOptions[i].style.display = "block";
+                }
+                
+                for (var i = 0; i < managerOptions.length; i++) {
+                    var managerDepartment = managerOptions[i].getAttribute("data-department");
+                    if (managerDepartment !== selectedDepartment && selectedDepartment !== "") {
+                        managerOptions[i].style.display = "none";
+                    }
+                }
+            }
+        </script>
+        
+        <input type="submit" value="Add Employee">
+    </div>
+    </form>
+    
+</body>
+
+</html>
